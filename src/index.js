@@ -90,26 +90,34 @@ function Pizza(props) {
 
 function Skill(props) {
   return (
-    <div className="skill">
-      <div>
+    <div className="skill" style={{ backgroundColor: props.color }}>
+      <span>
         {props.skill} {props.emoji}
-      </div>
-    </div>
+      </span>
+    </div >
   );
+}
+
+function SkillList() {
+  return (
+    <div className="skill-list">
+      <Skill skill='React' emoji='🫵' color='#123456' />
+      <Skill skill='HTML+CSS' emoji='🫥' color='orangered' />
+      <Skill skill='JavaScript' emoji='🫡' color='yellow' />
+      <Skill skill='Svelte' emoji='😶‍🌫️' color='orange' />
+    </div>
+  )
 }
 
 function Card(props) {
   return (
     <div className="card">
       <img className='avatar' src={props.photoName} alt={props.name} />
-      <div>
+      <div className="data">
         <h1>{props.name}</h1>
         <p>{props.description}</p>
+        <SkillList />
       </div>
-      <Skill skill='HTML+CSS' emoji='strong' />
-      <Skill skill='HTML+CSS' emoji='strong' />
-      <Skill skill='HTML+CSS' emoji='strong' />
-      <Skill skill='HTML+CSS' emoji='strong' />
     </div>
   )
 }
