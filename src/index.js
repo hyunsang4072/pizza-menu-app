@@ -52,11 +52,44 @@ function App() {
     <div className="container">
       <Header />
       <Menu />
-      <Card photoName='logo192.png' name='Harry Cho' description="Full-stack Web Developer. When I'm not coding, I like to play video games with my friends!" />
       <Footer />
+      <Card photoName='logo192.png' name='Harry Cho' description="Full-stack Web Developer. When I'm not coding, I like to play video games with my friends!" />
     </div>
   );
 }
+
+const skills = [
+  {
+    skill: "HTML+CSS",
+    level: "advanced",
+    color: "#2662EA"
+  },
+  {
+    skill: "JavaScript",
+    level: "advanced",
+    color: "#EFD81D"
+  },
+  {
+    skill: "Web Design",
+    level: "advanced",
+    color: "#C3DCAF"
+  },
+  {
+    skill: "Git and GitHub",
+    level: "intermediate",
+    color: "#E84F33"
+  },
+  {
+    skill: "React",
+    level: "advanced",
+    color: "#60DAFB"
+  },
+  {
+    skill: "Svelte",
+    level: "beginner",
+    color: "#FF3B00"
+  }
+];
 
 function Header() {
   return (
@@ -67,32 +100,50 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  // const pizzas = [];
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Our Menu</h2>
-      <Pizza name='Pizza Spinaci' ingredients='Tomato, mozarella, ...etc' photoName='pizzas/spinaci.jpg' price={10} />
-      <Pizza name='Pizza Funghi' ingredients='Tomato, mushrooms, ...etc' photoName='pizzas/funghi.jpg' price={12} />
+
+      {numPizzas > 0 ? (
+        <ul className="pizzas">
+          {pizzaData.map((pizza) => (
+            <Pizza pizzaObj={pizza} key={pizza.name} />
+          ))}
+        </ul>
+      ) : <p>We are out of pizzas</p>}
+
+
+      {/* <Pizza name='Pizza Spinaci' ingredients='Tomato, mozarella, ...etc' photoName='pizzas/spinaci.jpg' price={10} />
+      <Pizza name='Pizza Funghi' ingredients='Tomato, mushrooms, ...etc' photoName='pizzas/funghi.jpg' price={12} /> */}
     </main>
   )
 }
 
-function Pizza(props) {
+function Pizza({ pizzaObj }) {
   return (
-    <div>
-      <img src={props.photoName} alt={props.name} />
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name} />
       <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "Sold Out" : pizzaObj.price}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
-function Skill(props) {
+function Skill({ skill, color, level }) {
   return (
-    <div className="skill" style={{ backgroundColor: props.color }}>
+    <div className="skill" style={{ backgroundColor: color }}>
+      <span>{skill}</span>
       <span>
-        {props.skill} {props.emoji}
+        {level === 'beginner' && "👶"}
+        {level === "intermediate" && "👍"}
+        {level === "advanced" && "💪"}
       </span>
     </div >
   );
@@ -101,10 +152,13 @@ function Skill(props) {
 function SkillList() {
   return (
     <div className="skill-list">
-      <Skill skill='React' emoji='🫵' color='#123456' />
+      {skills.map((skill) => (
+        <Skill skill={skill.skill} color={skill.color} level={skill.level} />
+      ))}
+      {/* <Skill skill='React' emoji='🫵' color='#123456' />
       <Skill skill='HTML+CSS' emoji='🫥' color='orangered' />
       <Skill skill='JavaScript' emoji='🫡' color='yellow' />
-      <Skill skill='Svelte' emoji='😶‍🌫️' color='orange' />
+      <Skill skill='Svelte' emoji='😶‍🌫️' color='orange' /> */}
     </div>
   )
 }
@@ -136,9 +190,31 @@ function Footer() {
 
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}. We are currently open!
-    </footer>
+      <Order openHour={openHour} closeHour={closeHour} isOpen={isOpen} />
+    </footer >
   );
+}
+
+function Order(props) {
+  return (
+    <div className="container">
+      {<div style={{ textAlign: "center", fontWeight: "bolder" }}>{new Date().toLocaleTimeString()}</div>}
+      {
+        props.isOpen ? (
+          <div className="order">
+            <p>
+              We are open until {props.closeHour}:00. Come visit us or order online!
+            </p>
+            <button className="btn">Order Now</button>
+          </div>
+        ) : (
+          <p>
+            We are open from {props.openHour}:00 to {props.closeHour}:00!
+          </p>
+        )
+      }
+    </div>
+  )
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
